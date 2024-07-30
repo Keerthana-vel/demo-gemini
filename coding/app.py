@@ -11,8 +11,11 @@ from langchain.prompts import PromptTemplate
 from dotenv import load_dotenv
 
 load_dotenv()
-os.environ.get("GOOGLE_API_KEY")
-genai.configure(api_key=os.environ.get("GOOGLE_API_KEY"))
+import os
+
+api_key = os.environ.get('GOOGLE_API_KEY')
+if not api_key:
+  raise ValueError("GOOGLE_API_KEY environment variable not found.")
 
 def get_file_path(filename):
   """Gets the absolute path of a file in the same directory as the script."""
