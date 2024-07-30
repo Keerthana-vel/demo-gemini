@@ -15,7 +15,7 @@ os.getenv("GOOGLE_API_KEY")
 genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 
 # read all pdf files and return text
-file_paths = ['eval-melody-8-ug-1550.pdf']
+file_paths = ['./eval-melody-8-ug-1550.pdf']
 
 
 def file_read(file_paths):
