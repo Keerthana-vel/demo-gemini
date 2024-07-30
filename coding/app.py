@@ -11,7 +11,7 @@ from langchain.prompts import PromptTemplate
 from dotenv import load_dotenv
 
 load_dotenv()
-os.getenv("GOOGLE_API_KEY")
+os.environ.get("GOOGLE_API_KEY")
 genai.configure(api_key=os.environ.get("GOOGLE_API_KEY"))
 
 def get_file_path(filename):
