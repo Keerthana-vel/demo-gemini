@@ -17,24 +17,25 @@ api_key = os.environ.get('GOOGLE_API_KEY')
 if not api_key:
   raise ValueError("GOOGLE_API_KEY environment variable not found.")
 
-def get_file_path(filename):
-  """Gets the absolute path of a file in the same directory as the script."""
+def get_file_paths(filenames):
+  """Gets the absolute paths of multiple files in the same directory as the script."""
   script_dir = os.path.dirname(os.path.abspath(__file__))
-  file_path = os.path.join(script_dir, filename)
-  return file_path
+  file_paths = [os.path.join(script_dir, filename) for filename in filenames]
+  return file_paths
 
 # read all pdf files and return text
-file_paths= get_file_path('eval-melody-8-ug-1550.pdf')
+file_paths= get_file_paths(['avr-a1h-owners-manual-en.pdf','avr-a1h-info-sheet-en.pdf'])
 
 
 def file_read(file_paths):
-        text = ""
-        if file_paths.endswith('.pdf'):
-             with open(file_paths, 'rb') as pdf: 
+    text = ""
+    for file_path in file_paths:
+        if file_path.endswith('.pdf'):
+             with open(file_path, 'rb') as pdf: 
                 pdf_reader = PdfReader(pdf)
                 for page in pdf_reader.pages:
                     text += page.extract_text()
-        return text
+    return text
 
 # split text into chunks
 
@@ -94,18 +95,23 @@ def user_input(user_question):
     print(response)
     return response
 
+def handle_greeting(prompt):
+    greetings = ["hi", "hello", "hey"]
+    return any(greeting in prompt.lower() for greeting in greetings)
 
 def main():
     st.set_page_config(
-        page_title="Gemini PDF Chatbot",
+        page_title="AVR Chatbot",
         page_icon="🤖"
     )
     raw_text = file_read(file_paths)
     text_chunks = get_text_chunks(raw_text)
     
     get_vector_store(text_chunks)
-    st.title("Chat with Gemini🤖")
-    st.write("Welcome to the chat!")
+    st.title("Chat with AVR Assit 🤖")
+    st.write("""Welcome to the chat! +
+            Interested in AV Receiver!! +
+            I'm ready for your questions!!!""")
     st.sidebar.button('Clear Chat History', on_click=clear_chat_history)
 
     # Chat input
@@ -114,7 +120,7 @@ def main():
     if "messages" not in st.session_state.keys():
         st.session_state.messages = [
             {"role": "assistant", "content": "Ask me a question"}]
-
+    
     for message in st.session_state.messages:
         with st.chat_message(message["role"]):
             st.write(message["content"])
@@ -128,9 +134,12 @@ def main():
     if st.session_state.messages[-1]["role"] != "assistant":
         with st.chat_message("assistant"):
             with st.spinner("Thinking..."):
-                response = user_input(prompt)
-                placeholder = st.empty()
-                full_response = ''
+                if handle_greeting(prompt):
+                    response = "Hello! provide question related to AV reciever!!"
+                else:
+                    response = user_input(prompt)
+                    placeholder = st.empty()
+                    full_response = ''
                 for item in response['output_text']:
                     full_response += item
                     placeholder.markdown(full_response)
