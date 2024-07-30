@@ -15,7 +15,7 @@ os.getenv("GOOGLE_API_KEY")
 genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 
 # read all pdf files and return text
-file_paths = ['sample.txt']
+file_paths = ['eval-melody-8-ug-1550.pdf']
 
 
 def file_read(file_paths):
@@ -26,13 +26,12 @@ def file_read(file_paths):
                 pdf_reader = PdfReader(pdf)
                 for page in pdf_reader.pages:
                     text += page.extract_text()
-        # else:
-        #     with open(file_path, 'r', encoding='utf-8') as file:
-        #         text += file.read()
+        else:
+            with open(file_path, 'r', encoding='utf-8') as file:
+                text += file.read()
     return text
 
 # split text into chunks
-
 
 def get_text_chunks(text):
     splitter = RecursiveCharacterTextSplitter(
@@ -49,22 +48,6 @@ def get_vector_store(chunks):
     vector_store = FAISS.from_texts(chunks, embedding=embeddings)
     vector_store.save_local("faiss_index")
 
-# read all pdf files and return text
-# file_paths = ['eval-melody-8-ug-1550.pdf','adsp-21591-adsp-21593.pdf', 'avr-a1h-info-sheet-en.pdf','avr-a1h-owners-manual-en.pdf']
-
-
-# def preload_file_contents(file_paths):
-#     preloaded_texts = {}
-#     for file_path in file_paths:
-#         if file_path.endswith('.pdf'):
-#             file_data = get_pdf_text(file_path)
-#         else:
-#             with open(file_path, 'r', encoding='utf-8') as file:
-#                 file_data = file.read()
-#                 print(file_data)
-#         preloaded_texts[file_path] = file_data
-#     return preloaded_texts
-# preloaded_texts = preload_file_contents(file_paths)
 
 def get_conversational_chain():
     prompt_template = """
@@ -108,28 +91,14 @@ def user_input(user_question):
 
 
 def main():
-    print("@@@@@@@@@@@")
     st.set_page_config(
         page_title="Gemini PDF Chatbot",
         page_icon="🤖"
     )
     raw_text = file_read(file_paths)
-    print("11111111",raw_text)
     text_chunks = get_text_chunks(raw_text)
     
     get_vector_store(text_chunks)
-
-    # Sidebar for uploading PDF files
-    # with st.sidebar:
-    #     st.title("Menu:")
-    #     pdf_docs = st.file_uploader(
-    #         "Upload your PDF Files and Click on the Submit & Process Button", accept_multiple_files=True)
-    #     if st.button("Submit & Process"):
-    #         with st.spinner("Processing..."):
-                
-    #             st.success("Done")
-
-    # Main content area for displaying chat messages
     st.title("Chat with PDF files using Gemini🤖")
     st.write("Welcome to the chat!")
     st.sidebar.button('Clear Chat History', on_click=clear_chat_history)
