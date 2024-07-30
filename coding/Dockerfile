@@ -44,6 +44,9 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 # Switch to the non-privileged user to run the application.
 USER appuser
 
+#copy the file into the container
+COPY ./eval-melody-8-ug-1550.pdf
+
 # Copy the source code into the container.
 COPY . .
 
