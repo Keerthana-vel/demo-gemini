@@ -14,9 +14,16 @@ load_dotenv()
 os.getenv("GOOGLE_API_KEY")
 genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 
-# read all pdf files and return text
-file_paths = ['./eval-melody-8-ug-1550.pdf']
+import os
 
+def get_file_path(filename):
+  """Gets the absolute path of a file in the same directory as the script."""
+  script_dir = os.path.dirname(os.path.abspath(__file__))
+  file_path = os.path.join(script_dir, filename)
+  return file_path
+
+# read all pdf files and return text
+file_paths = get_file_path('eval-melody-8-ug-1550.pdf')
 
 def file_read(file_paths):
     for file_path in file_paths:

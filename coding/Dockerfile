@@ -45,7 +45,7 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 USER appuser
 
 #copy the file into the container
-COPY eval-melody-8-ug-1550.pdf  /docs
+COPY eval-melody-8-ug-1550.pdf  /app
 
 # Copy the source code into the container.
 COPY . .
