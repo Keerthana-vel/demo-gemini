@@ -12,7 +12,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 os.getenv("GOOGLE_API_KEY")
-genai.configure(api_key=os.environ("GOOGLE_API_KEY"))
+genai.configure(api_key=os.environ.get("GOOGLE_API_KEY"))
 
 def get_file_path(filename):
   """Gets the absolute path of a file in the same directory as the script."""
