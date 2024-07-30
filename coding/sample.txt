@@ -70,6 +70,8 @@ L2 cache, parity error, system control, debug, and monitor
 functions.
 SHARC+ CORE
 
+
+
 EVAL-MELODY-8 Evaluation Board  
 FEATURES 
 HDMI input and output with HDCP 1.4 technology support 
