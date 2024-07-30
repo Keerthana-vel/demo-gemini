@@ -76,7 +76,7 @@ def get_conversational_chain():
 
 def clear_chat_history():
     st.session_state.messages = [
-        {"role": "assistant", "content": "upload some pdfs and ask me a question"}]
+        {"role": "assistant", "content": "Ask me a question"}]
 
 
 def user_input(user_question):
@@ -104,7 +104,7 @@ def main():
     text_chunks = get_text_chunks(raw_text)
     
     get_vector_store(text_chunks)
-    st.title("Chat with PDF files using Gemini🤖")
+    st.title("Chat with Gemini🤖")
     st.write("Welcome to the chat!")
     st.sidebar.button('Clear Chat History', on_click=clear_chat_history)
 
@@ -113,7 +113,7 @@ def main():
 
     if "messages" not in st.session_state.keys():
         st.session_state.messages = [
-            {"role": "assistant", "content": "upload some pdfs and ask me a question"}]
+            {"role": "assistant", "content": "Ask me a question"}]
 
     for message in st.session_state.messages:
         with st.chat_message(message["role"]):
