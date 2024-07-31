@@ -11,7 +11,6 @@ from langchain.prompts import PromptTemplate
 from dotenv import load_dotenv
 
 load_dotenv()
-import os
 
 api_key = os.environ.get('GOOGLE_API_KEY')
 if not api_key:
@@ -79,6 +78,12 @@ def clear_chat_history():
     st.session_state.messages = [
         {"role": "assistant", "content": "Ask me a question"}]
 
+def handle_greeting(prompt):
+    greetings = ["hi", "hello", "hey"]
+    for greeting in greetings:
+        if greeting in prompt.lower():
+            return True
+    return False
 
 def user_input(user_question):
     embeddings = GoogleGenerativeAIEmbeddings(
@@ -92,12 +97,9 @@ def user_input(user_question):
     response = chain(
         {"input_documents": docs, "question": user_question}, return_only_outputs=True, )
 
-    print(response)
     return response
 
-def handle_greeting(prompt):
-    greetings = ["hi", "hello", "hey"]
-    return any(greeting in prompt.lower() for greeting in greetings)
+
 
 def main():
     st.set_page_config(
@@ -109,8 +111,8 @@ def main():
     
     get_vector_store(text_chunks)
     st.title("Chat with AVR Assit 🤖")
-    st.write("""Welcome to the chat! +
-            Interested in AV Receiver!! +
+    st.write("""Welcome to the chat! 
+            Interested in AV Receiver!! 
             I'm ready for your questions!!!""")
     st.sidebar.button('Clear Chat History', on_click=clear_chat_history)
 
@@ -135,15 +137,28 @@ def main():
         with st.chat_message("assistant"):
             with st.spinner("Thinking..."):
                 if handle_greeting(prompt):
-                    response = "Hello! provide question related to AV reciever!!"
+                    response = {"output_text:Hello! provide question related to AV reciever!!"}
                 else:
                     response = user_input(prompt)
-                    placeholder = st.empty()
-                    full_response = ''
-                for item in response['output_text']:
-                    full_response += item
+                placeholder = st.empty()
+                full_response = ''
+               # Ensure that response['output_text'] is handled correctly
+                output_text = response.get('output_text', "")
+            
+                if isinstance(output_text, str):
+                    # If output_text is a string, iterate through its characters
+                    for item in output_text:
+                        full_response += item
+                        placeholder.markdown(full_response)
+                elif isinstance(output_text, list):
+                    # If output_text is a list, iterate through its elements
+                    for item in output_text:
+                        full_response += item
+                        placeholder.markdown(full_response)
+                else:
+                    # If output_text is neither a string nor a list, handle it as an error or unexpected format
+                    full_response = "Unexpected response format."
                     placeholder.markdown(full_response)
-                placeholder.markdown(full_response)
         if response is not None:
             message = {"role": "assistant", "content": full_response}
             st.session_state.messages.append(message)
