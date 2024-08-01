@@ -137,7 +137,7 @@ def main():
         with st.chat_message("assistant"):
             with st.spinner("Thinking..."):
                 if handle_greeting(prompt):
-                    response = {"output_text:Hello! provide question related to AV reciever!!"}
+                    response = {"output_text":"Hello! provide question related to AV reciever!!"}
                 else:
                     response = user_input(prompt)
                 placeholder = st.empty()
