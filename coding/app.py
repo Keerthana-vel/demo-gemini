@@ -23,7 +23,7 @@ def get_file_paths(filenames):
     return file_paths
 
 # Read all pdf files and return text
-file_paths = get_file_paths(['avr-a1h-owners-manual-en.pdf', 'avr-a1h-info-sheet-en.pdf'])
+file_paths = get_file_paths(['eval-melody-8-ug-1550.pdf','avr-a1h-info-sheet-en.pdf','avr-a1h-owners-manual-en.pdf'])
 
 def file_read(file_paths):
     text = ""
