@@ -27,10 +27,10 @@ load_dotenv()
 api_key = os.environ.get("GOOGLE_API_KEY")
 if not api_key:
     raise ValueError("GOOGLE_API_KEY environment variable not found.")
-genai.configure(api_key=api_key)
-models = genai.list_models()
-for model in models:
-    print(model.name)
+# genai.configure(api_key=api_key)
+# models = genai.list_models()
+# for model in models:
+#     print(model.name)
 
 
 def get_file_paths(filenames):
@@ -41,7 +41,7 @@ def get_file_paths(filenames):
 
 
 # Read all pdf files and return text
-file_paths = get_file_paths([])
+file_paths = get_file_paths(["ADV7842.pdf"])
 
 # Provide web links here
 web_links = [
@@ -120,18 +120,14 @@ def get_vector_store():
 
 def get_conversational_chain():
     prompt_template = """
-You are a helpful assistant. 
-Answer ONLY from the provided context. 
-If the answer is not in the context, respond with: "I couldn't find that in the provided documents."
+    You are a helpful assistant. Use the context provided to answer the question as naturally and conversationally as possible. If the context does not contain the answer, feel free to provide a plausible response based on general knowledge.
 
-Context:
-{context}
+    Context: {context}
 
-Question:
-{question}
+    Question: {question}
 
-Answer:
-"""
+    Answer:
+    """
 
     model = ChatGoogleGenerativeAI(
         model="models/gemini-2.5-pro",
@@ -172,14 +168,14 @@ def user_input(user_question):
 
 
 def main():
-    st.set_page_config(page_title="AVR Chatbot", page_icon="🤖")
+    st.set_page_config(page_title="AVD7842", page_icon="🤖")
 
-    # if not os.path.exists("faiss_index"):
-    #     st.write("Precomputing data, please wait...")
-    #     precompute_data(file_paths, web_links)
-    # else:
-    #     st.write("Loading precomputed data...")
-    precompute_data(file_paths, web_links)
+    if not os.path.exists("faiss_index"):
+        st.write("Precomputing data, please wait...")
+        precompute_data(file_paths, web_links)
+    else:
+        st.write("")
+    # precompute_data(file_paths, web_links)
 
     st.title("AVD7842")
     st.write("""Welcome to the chat!""")
