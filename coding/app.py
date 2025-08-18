@@ -58,7 +58,9 @@ def file_read(file_paths):
             with open(file_path, "rb") as pdf:
                 pdf_reader = PdfReader(pdf)
                 for page in pdf_reader.pages:
-                    text += page.extract_text()
+                    page_text = page.extract_text()
+                    if page_text:
+                        text += page_text
     return text
 
 
@@ -151,11 +153,11 @@ def clear_chat_history():
 
 def handle_greeting(prompt):
     greetings = ["hi", "hello", "hey"]
-    # Normalize text: lowercase & remove punctuation
-    cleaned_prompt =  prompt.lower()
+    # Normalize text: lowercase
+    cleaned_prompt = prompt.lower()
 
     for greeting in greetings:
-        if greeting in cleaned_prompt.split():
+        if greeting in cleaned_prompt.split(): 
             return f"Hello, I'm AVD7842, a virtual assistant."
     return None
 
@@ -217,15 +219,10 @@ def main():
     if st.session_state.messages[-1]["role"] != "assistant":
         with st.chat_message("assistant"):
             with st.spinner("Thinking..."):
-                if handle_greeting(prompt):
-                    response = {"output_text": "Hello! how can i help you?"}
-                else:
-                    response = user_input(prompt)
+                output_text = user_input(prompt)
                 placeholder = st.empty()
                 full_response = ""
-                # Ensure that response['output_text'] is handled correctly
-                output_text = response.get("output_text", "")
-
+                
                 if isinstance(output_text, str):
                     # If output_text is a string, iterate through its characters
                     for item in output_text:
@@ -233,14 +230,14 @@ def main():
                         placeholder.markdown(full_response)
                 elif isinstance(output_text, list):
                     # If output_text is a list, iterate through its elements
-                    for item in output_text:
-                        full_response += item
+                    for item in output_text.split():
+                        full_response += item + " "
                         placeholder.markdown(full_response)
                 else:
                     # If output_text is neither a string nor a list, handle it as an error or unexpected format
                     full_response = "Unexpected response format."
                     placeholder.markdown(full_response)
-        if response is not None:
+        if output_text is not None:
             message = {"role": "assistant", "content": full_response}
             st.session_state.messages.append(message)
 
