@@ -167,18 +167,18 @@ def user_input(user_question):
     chain = get_conversational_chain()
 
     # Check for greeting first
-    greeting_response = handle_greeting(user_question)
+    if handle_greeting(user_question):
+        return "Hello, I'm AVD7842, a virtual assistant. How can I help you today?"
 
+    # Otherwise run the chain
     response = chain(
         {"input_documents": docs, "question": user_question},
         return_only_outputs=True,
     )
 
-    if greeting_response:
-        # Combine greeting with answer
-        return f"{greeting_response} Regarding your question: {response['output_text']}"
-    else:
-        return response['output_text']
+    # response is already a dict with "output_text"
+    return response["output_text"]
+
 
 
 
@@ -193,7 +193,7 @@ def main():
     # precompute_data(file_paths, web_links)
 
     st.title("AVD7842")
-    st.write("""Welcome to the chat!""")
+    st.write("""Hello, I'm AVD7842, a virtual assistant.""")
     st.sidebar.button("Clear Chat History", on_click=clear_chat_history)
 
     # Chat input
@@ -201,7 +201,7 @@ def main():
 
     if "messages" not in st.session_state.keys():
         st.session_state.messages = [
-            {"role": "assistant", "content": "Ask me a question"}
+            {"role": "assistant", "content": "How can I help you?"}
         ]
 
     for message in st.session_state.messages:
@@ -217,30 +217,15 @@ def main():
     if st.session_state.messages[-1]["role"] != "assistant":
         with st.chat_message("assistant"):
             with st.spinner("Thinking..."):
-                if handle_greeting(prompt):
-                    response = {"output_text": "Hello, I'm AVD7842, a virtual assistant. How can i help you?"}
-                else:
-                    response = user_input(prompt)
+                response = user_input(prompt)   # always string now
                 placeholder = st.empty()
                 full_response = ""
-                # Ensure that response['output_text'] is handled correctly
-                output_text = response.get("output_text", "")
 
-                if isinstance(output_text, str):
-                    # If output_text is a string, iterate through its characters
-                    for item in output_text:
-                        full_response += item
-                        placeholder.markdown(full_response)
-                elif isinstance(output_text, list):
-                    # If output_text is a list, iterate through its elements
-                    for item in output_text.split():
-                        full_response += item + " "
-                        placeholder.markdown(full_response)
-                else:
-                    # If output_text is neither a string nor a list, handle it as an error or unexpected format
-                    full_response = "Unexpected response format."
+                for word in response.split():
+                    full_response += word + " "
                     placeholder.markdown(full_response)
-        if output_text is not None:
+
+        if response:
             message = {"role": "assistant", "content": full_response}
             st.session_state.messages.append(message)
 
