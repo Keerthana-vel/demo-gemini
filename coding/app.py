@@ -157,7 +157,7 @@ def handle_greeting(prompt):
     for greeting in greetings:
         if greeting in cleaned_prompt.split(): 
             return True
-	return False
+    return False
 
 
 def user_input(user_question):
