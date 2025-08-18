@@ -1,5 +1,6 @@
 import os
 import asyncio
+import re #remove the punctuation in a string
 from PyPDF2 import PdfReader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
@@ -147,12 +148,17 @@ def clear_chat_history():
     st.session_state.messages = [{"role": "assistant", "content": "Ask me a question"}]
 
 
+
+
 def handle_greeting(prompt):
     greetings = ["hi", "hello", "hey"]
+    # Normalize text: lowercase & remove punctuation
+    cleaned_prompt = re.sub(r"[^\w\s]", "", prompt.lower())
+
     for greeting in greetings:
-        if greeting in prompt.lower():
-            return True
-    return False
+        if greeting in cleaned_prompt.split():
+            return f"Hello, I'm AVD7842, a virtual assistant."
+    return None
 
 
 def user_input(user_question):
@@ -161,12 +167,20 @@ def user_input(user_question):
 
     chain = get_conversational_chain()
 
+    # Check for greeting first
+    greeting_response = handle_greeting(user_question)
+
     response = chain(
         {"input_documents": docs, "question": user_question},
         return_only_outputs=True,
     )
 
-    return response
+    if greeting_response:
+        # Combine greeting with answer
+        return f"{greeting_response} Regarding your question: {response['output_text']}"
+    else:
+        return response['output_text']
+
 
 
 def main():
