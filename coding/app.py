@@ -41,7 +41,9 @@ def get_file_paths(filenames):
 
 
 # Read all pdf files and return text
-file_paths = get_file_paths(["ADV7842.pdf","5670.ADV7842_External_Memory_Test_Rev0.pdf","6574.ADV7842_Recommended_Settings_Rev2.0_241013.pdf","ADV7842 Soft UG-206.pdf","ADV7842 UG-214.pdf"])
+file_paths = get_file_paths(["ADV7842.pdf","5670.ADV7842_External_Memory_Test_Rev0.pdf","6574.ADV7842_Recommended_Settings_Rev2.0_241013.pdf","ADV7842 Soft UG-206.pdf","ADV7842 UG-214.pdf",
+"Eval board UG-235.pdf","an-1260.pdf","an-1180.pdf","ADV7842_Front_End_Evaluation_Board_RevC_Schematic.pdf","ADV7842_Front_End_Evaluation_Board_RevC_Layout.pdf","ADV7842_Eval_Note_RevA_14_December_2010.pdf","5670.ADV7842_External_Memory_Test_Rev0.pdf",
+"4251.ADV7844_ADV7842_Autographics_Pr0_031109-1.pdf","2451.HDMI_RX_PowerSupplies_RevA_050411.pdf","0535.ADV7842_No_External_Memory_Operation_RevA.pdf"])
 
 # Provide web links here
 web_links = [
