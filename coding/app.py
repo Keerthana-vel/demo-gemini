@@ -1,6 +1,5 @@
 import os
 import asyncio
-import re #remove the punctuation in a string
 from PyPDF2 import PdfReader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
@@ -153,7 +152,7 @@ def clear_chat_history():
 def handle_greeting(prompt):
     greetings = ["hi", "hello", "hey"]
     # Normalize text: lowercase & remove punctuation
-    cleaned_prompt = re.sub(r"[^\w\s]", "", prompt.lower())
+    cleaned_prompt =  prompt.lower()
 
     for greeting in greetings:
         if greeting in cleaned_prompt.split():
