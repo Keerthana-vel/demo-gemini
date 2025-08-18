@@ -58,9 +58,7 @@ def file_read(file_paths):
             with open(file_path, "rb") as pdf:
                 pdf_reader = PdfReader(pdf)
                 for page in pdf_reader.pages:
-                    page_text = page.extract_text()
-                    if page_text:
-                        text += page_text
+                    text += page.extract_text()
     return text
 
 
@@ -158,8 +156,9 @@ def handle_greeting(prompt):
 
     for greeting in greetings:
         if greeting in cleaned_prompt.split(): 
-            return f"Hello, I'm AVD7842, a virtual assistant."
-    return None
+            return True
+	else:
+    return False
 
 
 def user_input(user_question):
@@ -219,10 +218,15 @@ def main():
     if st.session_state.messages[-1]["role"] != "assistant":
         with st.chat_message("assistant"):
             with st.spinner("Thinking..."):
-                output_text = user_input(prompt)
+                if handle_greeting(prompt):
+                    response = {"output_text": "Hello, I'm AVD7842, a virtual assistant. How can i help you?"}
+                else:
+                    response = user_input(prompt)
                 placeholder = st.empty()
                 full_response = ""
-                
+                # Ensure that response['output_text'] is handled correctly
+                output_text = response.get("output_text", "")
+
                 if isinstance(output_text, str):
                     # If output_text is a string, iterate through its characters
                     for item in output_text:
